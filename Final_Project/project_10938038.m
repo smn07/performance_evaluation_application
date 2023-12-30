@@ -1,15 +1,15 @@
-% Simone Di Ienno, matricola: 225606, codice ID: 10938038
+%% Simone Di Ienno, matricola: 225606, codice ID: 10938038
 clear all;
 clc;
 
-%% global variables for weibull and pareto equation functions
+%% Global variables for weibull and pareto equation functions
 global m1_perweibull;
 global m2_perweibull;
 global m1_perpareto;
 global m2_perpareto;
 
-% All times are expressed in days
-% I know the distribution for writing and shooting stages
+% Times are expressed in days
+% I know the distribution for writing and shooting stages (Erlang)
 
 %% Fitting for Audio Editing stage
 audioTrace = importdata('TraceD-A.txt');
@@ -88,7 +88,7 @@ legend('AudioTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
 videoTrace = importdata('TraceD-V.txt');
 sortedVideoTrace1 = sort(videoTrace);
 sortedVideoTrace = sortedVideoTrace1(2:end);
-N = length(videoTrace);
+N = length(sortedVideoTrace);
 range = [0:0.1:max(videoTrace)];
 
 moment1 = mean(videoTrace);
@@ -96,7 +96,6 @@ moment2 = sum(videoTrace .^ 2) / N;
 
 %Exponential
 lambdaExpVideo = 1 / moment1;
-%yexp = @(range) 1-exp(-lambdaExpAudio*range);
 
 %Uniform
 a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
@@ -143,7 +142,7 @@ wm = [];
 
 %Hyper-Exponential
 paramHyperVideo = mle(sortedVideoTrace, 'pdf', @(sortedVideoTrace, l1, l2, p)HyperExp_pdf(sortedVideoTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
-disp('PARAMETRI HYPEREXP AUDIO EDITING:');
+disp('PARAMETRI HYPEREXP VIDEO EDITING:');
 disp(paramHyperVideo);
 
 figure;
@@ -159,6 +158,153 @@ grid on;
 legend('VideoTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
     'Pareto CDF', 'Hyper CDF');
 
+%% Fitting VFX
+compositingTrace = importdata('TraceD-X.txt');
+sortedVfxTrace = sort(compositingTrace);
+N = length(sortedVfxTrace);
+range = [0:0.1:max(compositingTrace)];
+
+moment1 = mean(compositingTrace);
+moment2 = sum(compositingTrace .^ 2) / N;
+
+%Exponential
+lambdaExpVfx = 1 / moment1;
+
+%Uniform
+a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
+b = moment1 + sqrt(12* (moment2 - moment1 ^ 2)) / 2;
+
+%Erlang
+mean_2 = mean(compositingTrace .^ 2);
+k = round((moment1 ^ 2) / (mean_2 - (moment1 ^ 2)));
+lambdaErlangVfx = k / moment1;
+
+%Weibull
+m1_perweibull = moment1;
+m2_perweibull = moment2;
+wm = [];
+ while(true)
+     wm = [];
+     ar = rand();
+     br = rand();
+     paramweibullVfx = fsolve(@(x)MM_Weibull_equation(x),[ar,br]);
+     wm = weibull_moments(paramweibullVfx);
+     % I consider that the max distance between weibull and trace moments is 0.002 
+     if abs(wm(1) - moment1) <= 0.002 & abs(wm(2) - moment2) <= 0.002
+        break;
+     end
+ end
+
+ %Pareto
+ m1_perpareto = moment1;
+ m2_perpareto = moment2;
+ pm = [];
+ while(true)
+    pm = [];
+    alpha = 0;
+    % Because alpha must be > 2
+    while alpha <= 2
+        alpha = 2 + rand();
+    end
+    paramparetoVfx = fsolve(@(x)MM_Pareto_equation(x),[alpha,rand()]);
+    pm = pareto_moments(paramparetoVfx);
+    if abs(pm(1) - moment1) <= 0.002 & abs(pm(2) - moment2) <= 0.002
+       break;
+    end
+ end
+
+%Hyper-Exponential
+paramHyperVfx = mle(sortedVfxTrace, 'pdf', @(sortedVfxTrace, l1, l2, p)HyperExp_pdf(sortedVfxTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
+disp('PARAMETRI HYPEREXP VFX EDITING:');
+disp(paramHyperVfx);
+
+figure;
+plot(sortedVfxTrace, [1:N]/N, ".", ...
+     range, Exp_cdf(range, [lambdaExpVfx]), "-", ...
+     range, Unif_cdf(range, [a,b]), "-", ...
+     range, Erlang_cdf(range, lambdaErlangVfx, k),"-", ...
+     range, Weibull_cdf(range,paramweibullVfx),"-", ...
+     range, Pareto_cdf(range,paramparetoVfx),"-", ...
+     range, HyperExp_cdf(range, paramHyperVfx),"-");
+title('VFX trace');
+grid on;
+legend('VfxTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
+    'Pareto CDF', 'Hyper CDF');
+
+%% Fitting Compositing
+compositingTrace = importdata('TraceD-C.txt');
+sortedCompositingTrace = sort(compositingTrace);
+N = length(sortedCompositingTrace);
+range = [0:0.1:max(compositingTrace)];
+
+moment1 = mean(compositingTrace);
+moment2 = sum(compositingTrace .^ 2) / N;
+
+%Exponential
+lambdaExpCompositing = 1 / moment1;
+
+%Uniform
+a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
+b = moment1 + sqrt(12* (moment2 - moment1 ^ 2)) / 2;
+
+%Erlang
+mean_2 = mean(compositingTrace .^ 2);
+k = round((moment1 ^ 2) / (mean_2 - (moment1 ^ 2)));
+lambdaErlangCompositing = k / moment1;
+
+%Weibull
+m1_perweibull = moment1;
+m2_perweibull = moment2;
+wm = [];
+ while(true)
+     wm = [];
+     ar = rand();
+     br = rand();
+     paramweibullCompositing = fsolve(@(x)MM_Weibull_equation(x),[ar,br]);
+     wm = weibull_moments(paramweibullCompositing);
+     % I consider that the max distance between weibull and trace moments is 0.002 
+     if abs(wm(1) - moment1) <= 0.002 & abs(wm(2) - moment2) <= 0.002
+        break;
+     end
+ end
+
+ %Pareto
+ m1_perpareto = moment1;
+ m2_perpareto = moment2;
+ pm = [];
+ while(true)
+    pm = [];
+    alpha = 0;
+    % Because alpha must be > 2
+    while alpha <= 2
+        alpha = 2 + rand();
+    end
+    paramparetoCompositing = fsolve(@(x)MM_Pareto_equation(x),[alpha,rand()]);
+    pm = pareto_moments(paramparetoCompositing);
+    if abs(pm(1) - moment1) <= 0.002 & abs(pm(2) - moment2) <= 0.002
+       break;
+    end
+ end
+
+%Hyper-Exponential
+paramHyperCompositing = mle(sortedCompositingTrace, 'pdf', @(sortedCompositingTrace, l1, l2, p)HyperExp_pdf(sortedCompositingTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4], 'Options', statset('MaxFunEvals', 1e5, 'MaxIter', 1e5));
+disp('PARAMETRI HYPEREXP COMPOSITING EDITING:');
+disp(paramHyperCompositing);
+
+%HyperE_values = mle(ServiceTime, 'pdf', @HyperExp_pdf, 'start', [0.8 / M(1), 1.2 / M(1), 0.4], 'LowerBound', [0, 0, 0], 'UpperBound', [Inf, Inf, 1], 'Options', statset('MaxFunEvals', 1e5, 'MaxIter', 1e5));
+
+figure;
+plot(sortedCompositingTrace, [1:N]/N, ".", ...
+     range, Exp_cdf(range, [lambdaExpCompositing]), "-", ...
+     range, Unif_cdf(range, [a,b]), "-", ...
+     range, Erlang_cdf(range, lambdaErlangCompositing, k),"-", ...
+     range, Weibull_cdf(range,paramweibullCompositing),"-", ...
+     range, Pareto_cdf(range,paramparetoCompositing),"-", ...
+     range, HyperExp_cdf(range, paramHyperCompositing),"-");
+title('Compositing trace');
+grid on;
+legend('CompositingTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
+    'Pareto CDF', 'Hyper CDF');
 
 %% FUNCTIONS
 function F = weibull_moments(param)
@@ -240,6 +386,7 @@ function F = Weibull_cdf(x,p)
 
 	F = 1 - exp(-(x/l).^k);
 end
+
 function F = Pareto_cdf(x,p)
      alpha = p(1);
      m = p(2);
