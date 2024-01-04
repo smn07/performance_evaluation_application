@@ -40,8 +40,8 @@ wm = [];
      wm = [];
      ar = rand();
      br = rand();
-     paramweibullVideo = fsolve(@(x)MM_Weibull_equation(x),[ar,br]);
-     wm = weibull_moments(paramweibullVideo);
+     paramweibullAudio = fsolve(@(x)MM_Weibull_equation(x),[ar,br]);
+     wm = weibull_moments(paramweibullAudio);
      % I consider that the max distance between weibull and trace moments is 0.002 
      if abs(wm(1) - moment1) <= 0.002 & abs(wm(2) - moment2) <= 0.002
         break;
@@ -59,8 +59,8 @@ wm = [];
     while alpha <= 2
         alpha = 2 + rand();
     end
-    paramparetoVideo = fsolve(@(x)MM_Pareto_equation(x),[alpha,rand()]);
-    pm = pareto_moments(paramparetoVideo);
+    paramparetoAudio = fsolve(@(x)MM_Pareto_equation(x),[alpha,rand()]);
+    pm = pareto_moments(paramparetoAudio);
     if abs(pm(1) - moment1) <= 0.002 & abs(pm(2) - moment2) <= 0.002
        break;
     end
@@ -68,16 +68,28 @@ wm = [];
 
 %Hyper-Exponential
 paramHyperAudio = mle(sortedAudioTrace, 'pdf', @(sortedAudioTrace, l1, l2, p)HyperExp_pdf(sortedAudioTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
+
+% PRINT VALUES
 disp('PARAMETRI HYPEREXP AUDIO EDITING:');
 disp(paramHyperAudio);
+disp('PARAMETRI EXP AUDIO EDITING:');
+disp(lambdaExpAudio);
+disp('PARAMETRI ERLANG AUDIO EDITING:');
+disp(lambdaErlangAudio);
+disp('PARAMETRI WEIBULL AUDIO EDITING:');
+disp(paramweibullAudio);
+disp('PARAMETRI PARETO AUDIO EDITING:');
+disp(paramparetoAudio);
+disp('PARAMETRI UNIFORM AUDIO EDITING:');
+disp([a,b]);
 
 figure;
 plot(sort(audioTrace), [1:N]/N, ".", ...
      range, Exp_cdf(range, [lambdaExpAudio]), "-", ...
      range, Unif_cdf(range, [a,b]), "-", ...
      range, Erlang_cdf(range, lambdaErlangAudio, k),"-", ...
-     range, Weibull_cdf(range,paramweibullVideo),"-", ...
-     range, Pareto_cdf(range,paramparetoVideo),"-", ...
+     range, Weibull_cdf(range,paramweibullAudio),"-", ...
+     range, Pareto_cdf(range,paramparetoAudio),"-", ...
      range, HyperExp_cdf(range, paramHyperAudio),"-");
 title('Audio Editing trace');
 grid on;
@@ -142,8 +154,20 @@ wm = [];
 
 %Hyper-Exponential
 paramHyperVideo = mle(sortedVideoTrace, 'pdf', @(sortedVideoTrace, l1, l2, p)HyperExp_pdf(sortedVideoTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
+
+% PRINT VALUES
 disp('PARAMETRI HYPEREXP VIDEO EDITING:');
 disp(paramHyperVideo);
+disp('PARAMETRI EXP VIDEO EDITING:');
+disp(lambdaExpVideo);
+disp('PARAMETRI ERLANG VIDEO EDITING:');
+disp(lambdaErlangVideo);
+disp('PARAMETRI WEIBULL VIDEO EDITING:');
+disp(paramweibullVideo);
+disp('PARAMETRI PARETO VIDEO EDITING:');
+disp(paramparetoVideo);
+disp('PARAMETRI UNIFORM VIDEO EDITING:');
+disp([a,b]);
 
 figure;
 plot(sortedVideoTrace, [1:N]/N, ".", ...
@@ -215,8 +239,20 @@ wm = [];
 
 %Hyper-Exponential
 paramHyperVfx = mle(sortedVfxTrace, 'pdf', @(sortedVfxTrace, l1, l2, p)HyperExp_pdf(sortedVfxTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
-disp('PARAMETRI HYPEREXP VFX EDITING:');
+
+% PRINT VALUES
+disp('PARAMETRI HYPEREXP VFX:');
 disp(paramHyperVfx);
+disp('PARAMETRI EXP VFX:');
+disp(lambdaExpVfx);
+disp('PARAMETRI ERLANG VFX:');
+disp(lambdaErlangVfx);
+disp('PARAMETRI WEIBULL VFX:');
+disp(paramweibullVfx);
+disp('PARAMETRI PARETO VFX:');
+disp(paramparetoVfx);
+disp('PARAMETRI UNIFORM VFX:');
+disp([a,b]);
 
 figure;
 plot(sortedVfxTrace, [1:N]/N, ".", ...
@@ -288,10 +324,20 @@ wm = [];
 
 %Hyper-Exponential
 paramHyperCompositing = mle(sortedCompositingTrace, 'pdf', @(sortedCompositingTrace, l1, l2, p)HyperExp_pdf(sortedCompositingTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4], 'Options', statset('MaxFunEvals', 1e5, 'MaxIter', 1e5));
-disp('PARAMETRI HYPEREXP COMPOSITING EDITING:');
-disp(paramHyperCompositing);
 
-%HyperE_values = mle(ServiceTime, 'pdf', @HyperExp_pdf, 'start', [0.8 / M(1), 1.2 / M(1), 0.4], 'LowerBound', [0, 0, 0], 'UpperBound', [Inf, Inf, 1], 'Options', statset('MaxFunEvals', 1e5, 'MaxIter', 1e5));
+% PRINT VALUES
+disp('PARAMETRI HYPEREXP COMPOSITING:');
+disp(paramHyperCompositing);
+disp('PARAMETRI EXP COMPOSITING:');
+disp(lambdaExpCompositing);
+disp('PARAMETRI ERLANG COMPOSITING:');
+disp(lambdaErlangCompositing);
+disp('PARAMETRI WEIBULL COMPOSITING:');
+disp(paramweibullCompositing);
+disp('PARAMETRI PARETO COMPOSITING:');
+disp(paramparetoCompositing);
+disp('PARAMETRI UNIFORM COMPOSITING:');
+disp([a,b]);
 
 figure;
 plot(sortedCompositingTrace, [1:N]/N, ".", ...
