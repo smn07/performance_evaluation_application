@@ -1,4 +1,5 @@
 %% Simone Di Ienno, matricola: 225606, codice ID: 10938038
+% PROJECT D
 clear all;
 clc;
 
@@ -26,11 +27,6 @@ lambdaExpAudio = 1 / moment1;
 %Uniform
 a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
 b = moment1 + sqrt(12* (moment2 - moment1 ^ 2)) / 2;
-
-%Erlang
-mean_2 = mean(audioTrace .^ 2);
-k = round((moment1 ^ 2) / (mean_2 - (moment1 ^ 2)));
-lambdaErlangAudio = k / moment1;
 
 %Weibull
 m1_perweibull = moment1;
@@ -74,8 +70,6 @@ disp('PARAMETRI HYPEREXP AUDIO EDITING:');
 disp(paramHyperAudio);
 disp('PARAMETRI EXP AUDIO EDITING:');
 disp(lambdaExpAudio);
-disp('PARAMETRI ERLANG AUDIO EDITING:');
-disp(lambdaErlangAudio);
 disp('PARAMETRI WEIBULL AUDIO EDITING:');
 disp(paramweibullAudio);
 disp('PARAMETRI PARETO AUDIO EDITING:');
@@ -87,13 +81,12 @@ figure;
 plot(sort(audioTrace), [1:N]/N, ".", ...
      range, Exp_cdf(range, [lambdaExpAudio]), "-", ...
      range, Unif_cdf(range, [a,b]), "-", ...
-     range, Erlang_cdf(range, lambdaErlangAudio, k),"-", ...
      range, Weibull_cdf(range,paramweibullAudio),"-", ...
      range, Pareto_cdf(range,paramparetoAudio),"-", ...
      range, HyperExp_cdf(range, paramHyperAudio),"-");
 title('Audio Editing trace');
 grid on;
-legend('AudioTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
+legend('AudioTrace', 'Exp CDF', 'Unif CDF','Weibull CDF', ...
     'Pareto CDF', 'Hyper CDF');
 
 %% Fitting for Video Editing stage
@@ -112,11 +105,6 @@ lambdaExpVideo = 1 / moment1;
 %Uniform
 a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
 b = moment1 + sqrt(12* (moment2 - moment1 ^ 2)) / 2;
-
-%Erlang
-mean_2 = mean(videoTrace .^ 2);
-k = round((moment1 ^ 2) / (mean_2 - (moment1 ^ 2)));
-lambdaErlangVideo = k / moment1;
 
 %Weibull
 m1_perweibull = moment1;
@@ -160,8 +148,6 @@ disp('PARAMETRI HYPEREXP VIDEO EDITING:');
 disp(paramHyperVideo);
 disp('PARAMETRI EXP VIDEO EDITING:');
 disp(lambdaExpVideo);
-disp('PARAMETRI ERLANG VIDEO EDITING:');
-disp(lambdaErlangVideo);
 disp('PARAMETRI WEIBULL VIDEO EDITING:');
 disp(paramweibullVideo);
 disp('PARAMETRI PARETO VIDEO EDITING:');
@@ -173,13 +159,12 @@ figure;
 plot(sortedVideoTrace, [1:N]/N, ".", ...
      range, Exp_cdf(range, [lambdaExpVideo]), "-", ...
      range, Unif_cdf(range, [a,b]), "-", ...
-     range, Erlang_cdf(range, lambdaErlangVideo, k),"-", ...
      range, Weibull_cdf(range,paramweibullVideo),"-", ...
      range, Pareto_cdf(range,paramparetoVideo),"-", ...
      range, HyperExp_cdf(range, paramHyperVideo),"-");
 title('Video Editing trace');
 grid on;
-legend('VideoTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
+legend('VideoTrace', 'Exp CDF', 'Unif CDF','Weibull CDF', ...
     'Pareto CDF', 'Hyper CDF');
 
 %% Fitting VFX
@@ -197,11 +182,6 @@ lambdaExpVfx = 1 / moment1;
 %Uniform
 a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
 b = moment1 + sqrt(12* (moment2 - moment1 ^ 2)) / 2;
-
-%Erlang
-mean_2 = mean(compositingTrace .^ 2);
-k = round((moment1 ^ 2) / (mean_2 - (moment1 ^ 2)));
-lambdaErlangVfx = k / moment1;
 
 %Weibull
 m1_perweibull = moment1;
@@ -245,8 +225,6 @@ disp('PARAMETRI HYPEREXP VFX:');
 disp(paramHyperVfx);
 disp('PARAMETRI EXP VFX:');
 disp(lambdaExpVfx);
-disp('PARAMETRI ERLANG VFX:');
-disp(lambdaErlangVfx);
 disp('PARAMETRI WEIBULL VFX:');
 disp(paramweibullVfx);
 disp('PARAMETRI PARETO VFX:');
@@ -258,13 +236,12 @@ figure;
 plot(sortedVfxTrace, [1:N]/N, ".", ...
      range, Exp_cdf(range, [lambdaExpVfx]), "-", ...
      range, Unif_cdf(range, [a,b]), "-", ...
-     range, Erlang_cdf(range, lambdaErlangVfx, k),"-", ...
      range, Weibull_cdf(range,paramweibullVfx),"-", ...
      range, Pareto_cdf(range,paramparetoVfx),"-", ...
      range, HyperExp_cdf(range, paramHyperVfx),"-");
 title('VFX trace');
 grid on;
-legend('VfxTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
+legend('VfxTrace', 'Exp CDF', 'Unif CDF','Weibull CDF', ...
     'Pareto CDF', 'Hyper CDF');
 
 %% Fitting Compositing
@@ -282,11 +259,6 @@ lambdaExpCompositing = 1 / moment1;
 %Uniform
 a = moment1 - sqrt(12* (moment2 - moment1 ^ 2)) / 2;
 b = moment1 + sqrt(12* (moment2 - moment1 ^ 2)) / 2;
-
-%Erlang
-mean_2 = mean(compositingTrace .^ 2);
-k = round((moment1 ^ 2) / (mean_2 - (moment1 ^ 2)));
-lambdaErlangCompositing = k / moment1;
 
 %Weibull
 m1_perweibull = moment1;
@@ -330,8 +302,6 @@ disp('PARAMETRI HYPEREXP COMPOSITING:');
 disp(paramHyperCompositing);
 disp('PARAMETRI EXP COMPOSITING:');
 disp(lambdaExpCompositing);
-disp('PARAMETRI ERLANG COMPOSITING:');
-disp(lambdaErlangCompositing);
 disp('PARAMETRI WEIBULL COMPOSITING:');
 disp(paramweibullCompositing);
 disp('PARAMETRI PARETO COMPOSITING:');
@@ -343,13 +313,12 @@ figure;
 plot(sortedCompositingTrace, [1:N]/N, ".", ...
      range, Exp_cdf(range, [lambdaExpCompositing]), "-", ...
      range, Unif_cdf(range, [a,b]), "-", ...
-     range, Erlang_cdf(range, lambdaErlangCompositing, k),"-", ...
      range, Weibull_cdf(range,paramweibullCompositing),"-", ...
      range, Pareto_cdf(range,paramparetoCompositing),"-", ...
      range, HyperExp_cdf(range, paramHyperCompositing),"-");
 title('Compositing trace');
 grid on;
-legend('CompositingTrace', 'Exp CDF', 'Unif CDF','Erlang CDF','Weibull CDF', ...
+legend('CompositingTrace', 'Exp CDF', 'Unif CDF','Weibull CDF', ...
     'Pareto CDF', 'Hyper CDF');
 
 %% FUNCTIONS
@@ -423,7 +392,6 @@ function F = Erlang_cdf(x,l,k)
         sumValue = sumValue + (l.*x).^j / factorial(j);
       end
       F = 1 - exp(-l.*x) .* sumValue;
-    %F = gamcdf(x,k,l);
 end
 
 function F = Weibull_cdf(x,p)
@@ -437,13 +405,6 @@ function F = Pareto_cdf(x,p)
      alpha = p(1);
      m = p(2);
      
-     F = [];
-     for i=0:(length(x)-1)
-         if(i >= m)
-            F = [F,1 - (m/i)^alpha];
-         else
-            F = [F,0];
-         end
-     end
+     F = (1- (m ./ x) .^ alpha) .* (x >= m);
 end
 
