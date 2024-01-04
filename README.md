@@ -6,4 +6,6 @@ sharing and dynamic allocation of computational and storage resources, centraliz
 - Analytical models
 - Simulation and resource contention
 
+Worked on Matlab and Java Modelling Tool (JMT).
+
 This repository contains all the practical assignments during the "Performance Evaluation and Applications" course at Polimi and also a final project.
