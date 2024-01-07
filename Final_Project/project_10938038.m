@@ -66,19 +66,19 @@ wm = [];
 paramHyperAudio = mle(sortedAudioTrace, 'pdf', @(sortedAudioTrace, l1, l2, p)HyperExp_pdf(sortedAudioTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
 
 % PRINT VALUES
-disp('PARAMETRI HYPEREXP AUDIO EDITING:');
+disp('PARAMETERS HYPEREXP AUDIO EDITING:');
 disp(paramHyperAudio);
-disp('PARAMETRI EXP AUDIO EDITING:');
+disp('PARAMETERS EXP AUDIO EDITING:');
 disp(lambdaExpAudio);
-disp('PARAMETRI WEIBULL AUDIO EDITING:');
+disp('PARAMETERS WEIBULL AUDIO EDITING:');
 disp(paramweibullAudio);
-disp('PARAMETRI PARETO AUDIO EDITING:');
+disp('PARAMETERS PARETO AUDIO EDITING:');
 disp(paramparetoAudio);
-disp('PARAMETRI UNIFORM AUDIO EDITING:');
+disp('PARAMETERS UNIFORM AUDIO EDITING:');
 disp([a,b]);
 
 figure;
-plot(sort(audioTrace), [1:N]/N, ".", ...
+plot(sortedAudioTrace, [1:N]/N, ".", ...
      range, Exp_cdf(range, [lambdaExpAudio]), "-", ...
      range, Unif_cdf(range, [a,b]), "-", ...
      range, Weibull_cdf(range,paramweibullAudio),"-", ...
@@ -95,10 +95,10 @@ videoTrace = importdata('TraceD-V.txt');
 sortedVideoTrace1 = sort(videoTrace);
 sortedVideoTrace = sortedVideoTrace1(2:end);
 N = length(sortedVideoTrace);
-range = [0:0.1:max(videoTrace)];
+range = [0:0.1:max(sortedVideoTrace)];
 
-moment1 = mean(videoTrace);
-moment2 = sum(videoTrace .^ 2) / N;
+moment1 = mean(sortedVideoTrace);
+moment2 = sum(sortedVideoTrace .^ 2) / N;
 
 %Exponential
 lambdaExpVideo = 1 / moment1;
@@ -145,15 +145,15 @@ wm = [];
 paramHyperVideo = mle(sortedVideoTrace, 'pdf', @(sortedVideoTrace, l1, l2, p)HyperExp_pdf(sortedVideoTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
 
 % PRINT VALUES
-disp('PARAMETRI HYPEREXP VIDEO EDITING:');
+disp('PARAMETERS HYPEREXP VIDEO EDITING:');
 disp(paramHyperVideo);
-disp('PARAMETRI EXP VIDEO EDITING:');
+disp('PARAMETERS EXP VIDEO EDITING:');
 disp(lambdaExpVideo);
-disp('PARAMETRI WEIBULL VIDEO EDITING:');
+disp('PARAMETERS WEIBULL VIDEO EDITING:');
 disp(paramweibullVideo);
-disp('PARAMETRI PARETO VIDEO EDITING:');
+disp('PARAMETERS PARETO VIDEO EDITING:');
 disp(paramparetoVideo);
-disp('PARAMETRI UNIFORM VIDEO EDITING:');
+disp('PARAMETERS UNIFORM VIDEO EDITING:');
 disp([a,b]);
 
 figure;
@@ -170,13 +170,13 @@ legend('VideoTrace', 'Exp CDF', 'Unif CDF','Weibull CDF', ...
     'Pareto CDF', 'Hyper CDF');
 
 %% Fitting VFX
-compositingTrace = importdata('TraceD-X.txt');
-sortedVfxTrace = sort(compositingTrace);
+vfxTrace = importdata('TraceD-X.txt');
+sortedVfxTrace = sort(vfxTrace);
 N = length(sortedVfxTrace);
-range = [0:0.1:max(compositingTrace)];
+range = [0:0.1:max(sortedVfxTrace)];
 
-moment1 = mean(compositingTrace);
-moment2 = sum(compositingTrace .^ 2) / N;
+moment1 = mean(vfxTrace);
+moment2 = sum(vfxTrace .^ 2) / N;
 
 %Exponential
 lambdaExpVfx = 1 / moment1;
@@ -223,15 +223,15 @@ wm = [];
 paramHyperVfx = mle(sortedVfxTrace, 'pdf', @(sortedVfxTrace, l1, l2, p)HyperExp_pdf(sortedVfxTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4]);
 
 % PRINT VALUES
-disp('PARAMETRI HYPEREXP VFX:');
+disp('PARAMETERS HYPEREXP VFX:');
 disp(paramHyperVfx);
-disp('PARAMETRI EXP VFX:');
+disp('PARAMETERS EXP VFX:');
 disp(lambdaExpVfx);
-disp('PARAMETRI WEIBULL VFX:');
+disp('PARAMETERS WEIBULL VFX:');
 disp(paramweibullVfx);
-disp('PARAMETRI PARETO VFX:');
+disp('PARAMETERS PARETO VFX:');
 disp(paramparetoVfx);
-disp('PARAMETRI UNIFORM VFX:');
+disp('PARAMETERS UNIFORM VFX:');
 disp([a,b]);
 
 figure;
@@ -251,7 +251,7 @@ legend('VfxTrace', 'Exp CDF', 'Unif CDF','Weibull CDF', ...
 compositingTrace = importdata('TraceD-C.txt');
 sortedCompositingTrace = sort(compositingTrace);
 N = length(sortedCompositingTrace);
-range = [0:0.1:max(compositingTrace)];
+range = [0:0.1:max(sortedCompositingTrace)];
 
 moment1 = mean(compositingTrace);
 moment2 = sum(compositingTrace .^ 2) / N;
@@ -301,15 +301,15 @@ wm = [];
 paramHyperCompositing = mle(sortedCompositingTrace, 'pdf', @(sortedCompositingTrace, l1, l2, p)HyperExp_pdf(sortedCompositingTrace, [l1, l2, p]), 'start', [0.8/moment1, 1.2/moment1, 0.4], 'Options', statset('MaxFunEvals', 1e5, 'MaxIter', 1e5));
 
 % PRINT VALUES
-disp('PARAMETRI HYPEREXP COMPOSITING:');
+disp('PARAMETERS HYPEREXP COMPOSITING:');
 disp(paramHyperCompositing);
-disp('PARAMETRI EXP COMPOSITING:');
+disp('PARAMETERS EXP COMPOSITING:');
 disp(lambdaExpCompositing);
-disp('PARAMETRI WEIBULL COMPOSITING:');
+disp('PARAMETERS WEIBULL COMPOSITING:');
 disp(paramweibullCompositing);
-disp('PARAMETRI PARETO COMPOSITING:');
+disp('PARAMETERS PARETO COMPOSITING:');
 disp(paramparetoCompositing);
-disp('PARAMETRI UNIFORM COMPOSITING:');
+disp('PARAMETERS UNIFORM COMPOSITING:');
 disp([a,b]);
 
 figure;
